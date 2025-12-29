@@ -12,13 +12,6 @@ from typing import List, Tuple
 # import fungsi dari loaderev.py — pastikan loaderev.py ada di folder yang sama
 from loaderev import read_lines, detect_type, gen_site_dorks
 
-from dork_executor import (
-    build_driver,
-    google_search,
-    setup_logger,
-    save_block_screenshot
-)
-
 # fungsi tambahan untuk validasi domain
 import re
 DOMAIN_RE = re.compile(r"^(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,63}$")
@@ -228,6 +221,13 @@ def main():
 
 
     if args.execute:
+        from dork_executor import (
+            build_driver,
+            google_search,
+            setup_logger,
+            save_block_screenshot
+        )
+        
         print("[EXEC] Starting Selenium executor...")
         setup_logger(args.log)
         driver = build_driver(
@@ -262,4 +262,5 @@ def main():
 # pastikan main() dipanggil ketika file ini dieksekusi langsung
 if __name__ == "__main__":
     main()
+
 
