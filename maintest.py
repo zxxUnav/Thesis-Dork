@@ -66,6 +66,8 @@ def main():
                 help="Jalankan browser tanpa GUI.")
     ap.add_argument("--max-results", type=int, default=5,
                 help="Ambil maksimal N hasil per query.")
+    ap.add_argument("--exec-limit", type=int, default=0,
+                help="Batasi jumlah dork yang dieksekusi (0 = semua).")
     ap.add_argument("--wait", type=int, default=15,
                 help="Timeout/wait Selenium (detik).")
     ap.add_argument("--results", default="results.csv",
@@ -181,7 +183,8 @@ def main():
             writer = csv.writer(f)
             writer.writerow(["domain","value","detected_type","dork","rank","title","url","snippet_or_error"])
 
-            for row in rows:
+            work = rows if args.exec_limit <= 0 else rows[:args.exec_limit]
+            for row in work:
                 domain = row["domain"]
                 value = row["value"]
                 detected_type = row["detected_type"]
@@ -216,6 +219,10 @@ def main():
                         domain, value, detected_type, dork,
                         -1, "", "", f"{code}: {e}"
                     ])
+                    # STOP kalau quota habis (biar gak bakar request lain)
+                    if code == "ERR_QUOTA_EXCEEDED":
+                        print("[!] Quota CSE harian habis. Stop supaya tidak buang request.")
+                        return
 
         return
 
@@ -255,3 +262,4 @@ def main():
 # pastikan main() dipanggil ketika file ini dieksekusi langsung
 if __name__ == "__main__":
     main()
+
