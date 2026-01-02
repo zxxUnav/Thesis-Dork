@@ -248,11 +248,17 @@ def cse_search_paged(
                     rank += 1
 
                 # kalau items kosong, stop paging biar gak loop kosong terus
-                if not items:
-                    break
-
                 elapsed_ms = int((time.time() - t0) * 1000)
-                logging.info(f"CSE page ok | start={start} | got={len(items)} | ms={elapsed_ms} | q={query}")
+
+                if not items:
+                    logging.info(
+                        f"CSE page empty | start={start} | got=0 | ms={elapsed_ms} | q={query}"
+                    )
+                    break
+                
+                logging.info(
+                    f"CSE page ok | start={start} | got={len(items)} | ms={elapsed_ms} | q={query}"
+                )
                 break
 
             except (requests.Timeout, requests.ConnectionError) as e:
@@ -282,3 +288,4 @@ def cse_search_paged(
     # post-process: normalize + dedup
     results = dedup_results(results, key="url")
     return results
+
