@@ -195,6 +195,10 @@ def main():
                         sleep_max=args.sleep_max,
                     )
 
+                    if not results:
+                        writer.writerow([domain, value, detected_type, dork, 0, "", "", "NO_RESULTS"])
+                       continue
+
                     for r in results:
                         url = r["url"]
                         # guard domain-scoped
@@ -262,5 +266,6 @@ def main():
 # pastikan main() dipanggil ketika file ini dieksekusi langsung
 if __name__ == "__main__":
     main()
+
 
 
